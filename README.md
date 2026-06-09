@@ -13,9 +13,18 @@ Run it somewhere with reliable connectivity (ideally the mail host itself).
 ## Endpoints
 
 - `GET /agent` — WebSocket endpoint for agents (`ws://host:8688/agent?token=...&device=...`)
-- `GET /` — HTML status page (auto-refreshing)
-- `GET /api/status` — JSON device list
-- `GET /healthz` — liveness probe
+- `GET /` — HTML status panel (auto-refreshing), **login required**
+- `GET /login` · `GET /logout` — panel session login/logout
+- `GET /api/status` — JSON device list, **login required**
+- `GET /healthz` — liveness probe (no auth)
+
+## Web panel auth
+
+The dashboard (`/` and `/api/status`) is protected by a username/password login
+(`PANEL_USER` / `PANEL_PASSWORD`); a successful login sets an HttpOnly session
+cookie valid for 1 day. If `PANEL_PASSWORD` is empty, a random one is generated
+at startup and printed to the log. Humans authenticate with these credentials;
+agents authenticate separately with `NETDOG_TOKEN` on the `/agent` WebSocket.
 
 ## Alerts
 
@@ -31,6 +40,8 @@ Run it somewhere with reliable connectivity (ideally the mail host itself).
 | `NETDOG_LISTEN` | `0.0.0.0:8688` | bind address |
 | `NETDOG_TOKEN` | *(empty)* | shared secret; agents must match. **Set this.** |
 | `NETDOG_OFFLINE_TIMEOUT` | `90` | seconds without heartbeat → offline |
+| `PANEL_USER` | `admin` | panel login username |
+| `PANEL_PASSWORD` | *(random)* | panel login password; if empty, generated at startup and logged |
 | `NETDOG_EMAIL_ENABLED` | `true` | |
 | `NETDOG_EMAIL_TO` | | comma-separated recipients |
 | `SMTP_HOST` / `SMTP_PORT` | / `465` | |
