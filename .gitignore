@@ -1,0 +1,5 @@
+/target
+# Real runtime env — contains SMTP credentials and the shared token.
+.env
+.idea/
+.DS_Store

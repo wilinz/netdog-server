@@ -1,0 +1,9 @@
+services:
+  netdog-server:
+    build: .
+    container_name: netdog-server
+    restart: unless-stopped
+    ports:
+      - "8688:8688"
+    env_file:
+      - .env
